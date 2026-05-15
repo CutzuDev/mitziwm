@@ -16,7 +16,17 @@ Hold your gesture keys (default: **Ctrl + Shift**), then drag the mouse from any
 
 A small dot appears under the cursor after a short delay to confirm the gesture is active. Release the keys once you've dragged far enough and the window snaps.
 
-Every direction is independently configurable from the tray menu — you can assign any of ~35 snap positions to each direction (halves, thirds, fourths, sixths, corners, maximize, center, etc.).
+Every direction is independently configurable from the tray menu. Available snap positions:
+
+| Category | Positions |
+|----------|-----------|
+| Maximize | Maximize, Almost Maximize, Maximize Height |
+| Halves | Left Half, Right Half, Center Half, Top Half, Bottom Half |
+| Corners | Top Left, Top Right, Bottom Left, Bottom Right |
+| Thirds | First Third, Center Third, Last Third, First Two Thirds, Center Two Thirds, Last Two Thirds |
+| Fourths | First Fourth, Second Fourth, Third Fourth, Last Fourth, First Three Fourths, Last Three Fourths |
+| Sixths | Top Left Sixth, Top Center Sixth, Top Right Sixth, Bottom Left Sixth, Bottom Center Sixth, Bottom Right Sixth, First Sixth, Last Sixth |
+| Special | Center, Center Prominently, Restore |
 
 The gesture trigger keys are also configurable: right-click the tray → **Change Gesture Key...**, hold whatever modifier combo you want (up to 2 keys from Ctrl / Shift / Alt / Win), then click OK.
 
