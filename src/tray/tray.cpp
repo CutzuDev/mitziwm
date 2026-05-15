@@ -156,6 +156,7 @@ void showTrayMenu(HWND hwnd) {
     AppendMenu(menu, MF_SEPARATOR, 0, nullptr);
     UINT startupFlags = MF_STRING | (isStartOnBoot() ? MF_CHECKED : MF_UNCHECKED);
     AppendMenu(menu, startupFlags, MENU_STARTUP, L"Start on Boot");
+    AppendMenu(menu, MF_STRING, MENU_HOTKEY, L"Change Gesture Key...");
     AppendMenu(menu, MF_SEPARATOR, 0, nullptr);
     AppendMenu(menu, MF_STRING, MENU_QUIT, L"Quit");
 

@@ -1,6 +1,7 @@
 #include "window.h"
 #include "./window/gestures.h"
 #include "./tray/tray.h"
+#include "./tray/hotkey_dialog.h"
 #include "./config/config.h"
 #include <dwmapi.h>
 #include <windef.h>
@@ -22,6 +23,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         }
         if (id == MENU_STARTUP) {
             setStartOnBoot(!isStartOnBoot());
+            return 0;
+        }
+        if (id == MENU_HOTKEY) {
+            showHotkeyDialog(hwnd);
             return 0;
         }
         if (id >= MENU_GESTURE_BASE && id < MENU_GESTURE_BASE + 400) {

@@ -61,7 +61,17 @@ struct GestureConfig {
     SnapAction right = SnapAction::Right;
 };
 
+struct HotkeyConfig {
+    bool ctrl     = true;
+    bool shift    = true;
+    bool alt      = false;
+    bool win      = false;
+    bool xbutton1 = false;
+    bool xbutton2 = false;
+};
+
 extern GestureConfig gestureConfig;
+extern HotkeyConfig  hotkeyConfig;
 
 void installGestureHook(HWND hwnd);
 void removeGestureHook();

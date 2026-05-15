@@ -4,18 +4,34 @@
 #include <cstdlib>
 #include <windows.h>
 
-static HHOOK hookHandle    = nullptr;
-static HWND  gestureWindow = nullptr;
-static bool  gestureActive = false;
-static bool  overlayShown  = false;
-static bool  ctrlHeld      = false;
-static bool  shiftHeld     = false;
+static HHOOK hookHandle      = nullptr;
+static HHOOK mouseHookHandle = nullptr;
+static HWND  gestureWindow   = nullptr;
+static bool  gestureActive   = false;
+static bool  overlayShown    = false;
+static bool  ctrlHeld        = false;
+static bool  shiftHeld       = false;
+static bool  altHeld         = false;
+static bool  winHeld         = false;
+static bool  xbutton1Held    = false;
+static bool  xbutton2Held    = false;
 static POINT gestureStart;
 
 static const UINT OVERLAY_DELAY_TIMER = 1002;
 static const int  MIN_PIXELS          = 10;
 
 GestureConfig gestureConfig;
+HotkeyConfig  hotkeyConfig;
+
+static bool hotkeySatisfied() {
+    return (hotkeyConfig.ctrl || hotkeyConfig.shift || hotkeyConfig.alt || hotkeyConfig.win || hotkeyConfig.xbutton1 || hotkeyConfig.xbutton2)
+        && (!hotkeyConfig.ctrl     || ctrlHeld)
+        && (!hotkeyConfig.shift    || shiftHeld)
+        && (!hotkeyConfig.alt      || altHeld)
+        && (!hotkeyConfig.win      || winHeld)
+        && (!hotkeyConfig.xbutton1 || xbutton1Held)
+        && (!hotkeyConfig.xbutton2 || xbutton2Held);
+}
 
 static void executeSnap(HWND target, SnapAction action) {
     switch (action) {
@@ -90,22 +106,63 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
 
     KBDLLHOOKSTRUCT* key = (KBDLLHOOKSTRUCT*)lParam;
 
-    if (wParam == WM_KEYDOWN) {
-        if (key->vkCode == VK_LCONTROL || key->vkCode == VK_RCONTROL) ctrlHeld = true;
+    if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
+        if (key->vkCode == VK_LCONTROL || key->vkCode == VK_RCONTROL) ctrlHeld  = true;
         if (key->vkCode == VK_LSHIFT   || key->vkCode == VK_RSHIFT)   shiftHeld = true;
+        if (key->vkCode == VK_LMENU    || key->vkCode == VK_RMENU)    altHeld   = true;
+        if (key->vkCode == VK_LWIN     || key->vkCode == VK_RWIN)     winHeld   = true;
 
-        if (ctrlHeld && shiftHeld && !gestureActive) {
+        if (hotkeySatisfied() && !gestureActive) {
             GetCursorPos(&gestureStart);
             gestureActive = true;
-            SetTimer(gestureWindow, OVERLAY_DELAY_TIMER, 100, nullptr);
+            SetTimer(gestureWindow, OVERLAY_DELAY_TIMER, 25, nullptr);
         }
     }
 
-    if (wParam == WM_KEYUP) {
-        if (key->vkCode == VK_LCONTROL || key->vkCode == VK_RCONTROL) ctrlHeld = false;
+    if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
+        if (key->vkCode == VK_LCONTROL || key->vkCode == VK_RCONTROL) ctrlHeld  = false;
         if (key->vkCode == VK_LSHIFT   || key->vkCode == VK_RSHIFT)   shiftHeld = false;
+        if (key->vkCode == VK_LMENU    || key->vkCode == VK_RMENU)    altHeld   = false;
+        if (key->vkCode == VK_LWIN     || key->vkCode == VK_RWIN)     winHeld   = false;
 
-        if (gestureActive && (!ctrlHeld || !shiftHeld)) {
+        if (gestureActive && !hotkeySatisfied()) {
+            KillTimer(gestureWindow, OVERLAY_DELAY_TIMER);
+            if (overlayShown) {
+                hideOverlay();
+                overlayShown = false;
+            }
+            POINT gestureEnd;
+            GetCursorPos(&gestureEnd);
+            handleGesture(gestureStart, gestureEnd);
+            gestureActive = false;
+        }
+    }
+
+    return CallNextHookEx(nullptr, nCode, wParam, lParam);
+}
+
+LRESULT CALLBACK LowLevelMouseProc(int nCode, WPARAM wParam, LPARAM lParam) {
+    if (nCode != HC_ACTION)
+        return CallNextHookEx(nullptr, nCode, wParam, lParam);
+
+    MSLLHOOKSTRUCT* ms = (MSLLHOOKSTRUCT*)lParam;
+
+    if (wParam == WM_XBUTTONDOWN) {
+        if (HIWORD(ms->mouseData) == XBUTTON1) xbutton1Held = true;
+        if (HIWORD(ms->mouseData) == XBUTTON2) xbutton2Held = true;
+
+        if (hotkeySatisfied() && !gestureActive) {
+            GetCursorPos(&gestureStart);
+            gestureActive = true;
+            SetTimer(gestureWindow, OVERLAY_DELAY_TIMER, 25, nullptr);
+        }
+    }
+
+    if (wParam == WM_XBUTTONUP) {
+        if (HIWORD(ms->mouseData) == XBUTTON1) xbutton1Held = false;
+        if (HIWORD(ms->mouseData) == XBUTTON2) xbutton2Held = false;
+
+        if (gestureActive && !hotkeySatisfied()) {
             KillTimer(gestureWindow, OVERLAY_DELAY_TIMER);
             if (overlayShown) {
                 hideOverlay();
@@ -122,10 +179,12 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
 }
 
 void installGestureHook(HWND hwnd) {
-    gestureWindow = hwnd;
-    hookHandle    = SetWindowsHookEx(WH_KEYBOARD_LL, LowLevelKeyboardProc, nullptr, 0);
+    gestureWindow   = hwnd;
+    hookHandle      = SetWindowsHookEx(WH_KEYBOARD_LL, LowLevelKeyboardProc, nullptr, 0);
+    mouseHookHandle = SetWindowsHookEx(WH_MOUSE_LL,    LowLevelMouseProc,    nullptr, 0);
 }
 
 void removeGestureHook() {
     UnhookWindowsHookEx(hookHandle);
+    UnhookWindowsHookEx(mouseHookHandle);
 }
