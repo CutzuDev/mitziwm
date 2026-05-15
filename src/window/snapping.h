@@ -1,13 +1,10 @@
 #pragma once
 #include <windows.h>
 
-// Gets the work area of the monitor the given window is on
-// (work area = screen minus taskbar)
+
 RECT getMonitorWorkArea(HWND hwnd);
 HWND getWindowUnderCursor();
 
-// Snap the given window to a position
-// Snap the given window to a position
 
 // Halves
 void snapLeft(HWND hwnd);
