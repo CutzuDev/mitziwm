@@ -11,6 +11,7 @@ add_executable(MitziWM WIN32
     src/window/overlay.cpp
     src/tray/tray.cpp
     src/config/config.cpp
+    ${CMAKE_BINARY_DIR}/resources.rc
 )
 
 target_link_libraries(MitziWM
@@ -27,5 +28,7 @@ target_compile_definitions(MitziWM PRIVATE
     _AMD64_
     WIN32_LEAN_AND_MEAN
 )
+
+configure_file(resources.rc.in ${CMAKE_BINARY_DIR}/resources.rc @ONLY)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

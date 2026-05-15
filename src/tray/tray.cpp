@@ -137,7 +137,7 @@ void addTrayIcon(HWND hwnd) {
     nid.uID              = 1;
     nid.uFlags           = NIF_ICON | NIF_MESSAGE | NIF_TIP;
     nid.uCallbackMessage = WM_TRAY;
-    nid.hIcon            = LoadIcon(nullptr, IDI_APPLICATION);
+    nid.hIcon = (HICON)LoadImage(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDI_MYWM_ICON), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
     lstrcpy(nid.szTip, L"MitziWM");
     Shell_NotifyIcon(NIM_ADD, &nid);
 }

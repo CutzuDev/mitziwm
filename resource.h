@@ -1,0 +1,1 @@
+#define IDI_MYWM_ICON 101
