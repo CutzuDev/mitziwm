@@ -1,0 +1,14 @@
+CompileFlags:
+  Add:
+    - "--include-directory=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include"
+    - "--include-directory=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Auxiliary/VS/include"
+    - "--include-directory=C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt"
+    - "--include-directory=C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um"
+    - "--include-directory=C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/shared"
+    - "--include-directory=C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/winrt"
+    - "-DUNICODE"
+    - "-D_UNICODE"
+    - "-D_WIN32"
+Diagnostics:
+  MissingIncludes: Strict
+  UnusedIncludes: Strict
