@@ -1,6 +1,6 @@
 # MitziWM
 
-A lightweight window manager for Windows. Hold a modifier combo, drag your mouse in a direction, and the focused window snaps to a position. No taskbar clutter, no config files to hand-edit — just a tray icon and a right-click menu.
+A lightweight window manager for Windows. Hold a modifier combo, drag your mouse in a direction, and the focused window snaps to a position. No taskbar clutter, no config files to hand-edit just a tray icon and a right-click menu.
 
 Named after my cat.
 
@@ -10,9 +10,9 @@ Named after my cat.
 
 Hold your gesture keys (default: **Ctrl + Shift**), then drag the mouse from anywhere on screen:
 
-- **Left / Right** — snap to left or right half
-- **Up** — snap to top half
-- **Down** — snap to bottom half
+- **Left / Right** snap to left or right half
+- **Up** snap to top half
+- **Down** snap to bottom half
 
 A small dot appears under the cursor after a short delay to confirm the gesture is active. Release the keys once you've dragged far enough and the window snaps.
 
@@ -48,7 +48,7 @@ Settings are saved to `%APPDATA%\MitziWM\config.ini`.
 - **Git**  
   https://git-scm.com/download/win
 
-That's it. No external libraries — everything else is Win32.
+That's it. No external libraries everything else is Win32.
 
 ### Build
 
@@ -76,7 +76,7 @@ cmake --build . --config Release
 cpack -C Release
 ```
 
-This produces `MitziWM-1.0.0-win64.exe` in the build directory — a standard Windows installer that puts the exe in `Program Files\MitziWM\`, adds a Start Menu shortcut, and registers an uninstaller in Add/Remove Programs.
+This produces `MitziWM-1.0.0-win64.exe` in the build directory a standard Windows installer that puts the exe in `Program Files\MitziWM\`, adds a Start Menu shortcut, and registers an uninstaller in Add/Remove Programs.
 
 ---
 
@@ -93,6 +93,6 @@ Right-click the tray icon to:
 
 ## Notes
 
-- Only one instance runs at a time — launching a second copy shows a message and exits.
-- The Win key works as a modifier but will also open the Start menu — probably best to avoid it.
+- Only one instance runs at a time launching a second copy shows a message and exits.
+- The Win key works as a modifier but will also open the Start menu probably best to avoid it.
 - Config survives updates since it lives in AppData, not next to the exe.
