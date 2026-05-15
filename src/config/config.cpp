@@ -1,5 +1,6 @@
 #include "config.h"
 #include "../window/gestures.h"
+#include <cstdio>
 #include <shlobj.h>
 #include <windows.h>
 

@@ -1,6 +1,19 @@
 #include "snapping.h"
+#include <dwmapi.h>
 #include <windef.h>
 #include <winuser.h>
+
+static void snapToRect(HWND hwnd, int x, int y, int w, int h) {
+    RECT wr, fr;
+    GetWindowRect(hwnd, &wr);
+    if (DwmGetWindowAttribute(hwnd, DWMWA_EXTENDED_FRAME_BOUNDS, &fr, sizeof(RECT)) == S_OK) {
+        x -= fr.left   - wr.left;
+        y -= fr.top    - wr.top;
+        w += (fr.left  - wr.left) + (wr.right  - fr.right);
+        h += (fr.top   - wr.top)  + (wr.bottom - fr.bottom);
+    }
+    SetWindowPos(hwnd, HWND_TOP, x, y, w, h, SWP_NOACTIVATE);
+}
 
 RECT getMonitorWorkArea(HWND hwnd) {
   HMONITOR monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
@@ -28,7 +41,7 @@ void snapLeft(HWND hwnd) {
   int y = area.top;
   int width = (area.right - area.left) / 2;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapRight(HWND hwnd) {
@@ -37,7 +50,7 @@ void snapRight(HWND hwnd) {
   int x = area.left + width;
   int y = area.top;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapTop(HWND hwnd) {
@@ -46,7 +59,7 @@ void snapTop(HWND hwnd) {
   int y = area.top;
   int width = area.right - area.left;
   int height = (area.bottom - area.top) / 2;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapBottom(HWND hwnd) {
@@ -55,7 +68,7 @@ void snapBottom(HWND hwnd) {
   int height = (area.bottom - area.top) / 2;
   int x = area.left;
   int y = area.top + height;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 // Quarters
@@ -66,7 +79,7 @@ void snapTopLeft(HWND hwnd) {
   int y = area.top;
   int width = (area.right - area.left) / 2;
   int height = (area.bottom - area.top) / 2;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapTopRight(HWND hwnd) {
@@ -75,7 +88,7 @@ void snapTopRight(HWND hwnd) {
   int x = area.left + width;
   int y = area.top;
   int height = (area.bottom - area.top) / 2;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapBottomLeft(HWND hwnd) {
@@ -84,7 +97,7 @@ void snapBottomLeft(HWND hwnd) {
   int width = (area.right - area.left) / 2;
   int height = (area.bottom - area.top) / 2;
   int y = area.top + height;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapBottomRight(HWND hwnd) {
@@ -93,7 +106,7 @@ void snapBottomRight(HWND hwnd) {
   int height = (area.bottom - area.top) / 2;
   int x = area.left + width;
   int y = area.top + height;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 // Thirds
@@ -104,7 +117,7 @@ void snapFirstThird(HWND hwnd) {
   int y = area.top;
   int width = (area.right - area.left) / 3;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapCenterThird(HWND hwnd) {
@@ -113,7 +126,7 @@ void snapCenterThird(HWND hwnd) {
   int x = area.left + width;
   int y = area.top;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapLastThird(HWND hwnd) {
@@ -122,7 +135,7 @@ void snapLastThird(HWND hwnd) {
   int x = area.right - width;
   int y = area.top;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 // Two thirds
@@ -134,7 +147,7 @@ void snapCenterHalf(HWND hwnd) {
   int x      = area.left + (areaW - width) / 2;
   int y      = area.top;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP, x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapFirstTwoThirds(HWND hwnd) {
@@ -143,7 +156,7 @@ void snapFirstTwoThirds(HWND hwnd) {
   int y = area.top;
   int width = (area.right - area.left) * 2 / 3;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapCenterTwoThirds(HWND hwnd) {
@@ -153,7 +166,7 @@ void snapCenterTwoThirds(HWND hwnd) {
   int x      = area.left + (areaW - width) / 2;
   int y      = area.top;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP, x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapLastTwoThirds(HWND hwnd) {
@@ -162,7 +175,7 @@ void snapLastTwoThirds(HWND hwnd) {
   int x = area.right - width;
   int y = area.top;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 // Fourths
@@ -173,7 +186,7 @@ void snapFirstFourth(HWND hwnd) {
   int y = area.top;
   int width = (area.right - area.left) / 4;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapSecondFourth(HWND hwnd) {
@@ -182,7 +195,7 @@ void snapSecondFourth(HWND hwnd) {
   int x = area.left + width;
   int y = area.top;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapThirdFourth(HWND hwnd) {
@@ -191,7 +204,7 @@ void snapThirdFourth(HWND hwnd) {
   int x = area.left + width * 2;
   int y = area.top;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapLastFourth(HWND hwnd) {
@@ -200,7 +213,7 @@ void snapLastFourth(HWND hwnd) {
   int x = area.right - width;
   int y = area.top;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 // Three fourths
@@ -211,7 +224,7 @@ void snapFirstThreeFourths(HWND hwnd) {
   int y = area.top;
   int width = (area.right - area.left) * 3 / 4;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapLastThreeFourths(HWND hwnd) {
@@ -220,7 +233,7 @@ void snapLastThreeFourths(HWND hwnd) {
   int x = area.right - width;
   int y = area.top;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 // Sixths
@@ -231,7 +244,7 @@ void snapTopFirstThird(HWND hwnd) {
   int y = area.top;
   int width = (area.right - area.left) / 3;
   int height = (area.bottom - area.top) / 2;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapTopCenterThird(HWND hwnd) {
@@ -240,7 +253,7 @@ void snapTopCenterThird(HWND hwnd) {
   int x = area.left + width;
   int y = area.top;
   int height = (area.bottom - area.top) / 2;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapTopLastThird(HWND hwnd) {
@@ -249,7 +262,7 @@ void snapTopLastThird(HWND hwnd) {
   int x = area.right - width;
   int y = area.top;
   int height = (area.bottom - area.top) / 2;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapBottomFirstThird(HWND hwnd) {
@@ -258,7 +271,7 @@ void snapBottomFirstThird(HWND hwnd) {
   int width = (area.right - area.left) / 3;
   int height = (area.bottom - area.top) / 2;
   int y = area.top + height;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapBottomCenterThird(HWND hwnd) {
@@ -267,7 +280,7 @@ void snapBottomCenterThird(HWND hwnd) {
   int x = area.left + width;
   int height = (area.bottom - area.top) / 2;
   int y = area.top + height;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapBottomLastThird(HWND hwnd) {
@@ -276,7 +289,7 @@ void snapBottomLastThird(HWND hwnd) {
   int x = area.right - width;
   int height = (area.bottom - area.top) / 2;
   int y = area.top + height;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 // Special
@@ -287,7 +300,7 @@ void snapFirstSixth(HWND hwnd) {
   int y      = area.top;
   int width  = (area.right - area.left) / 6;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP, x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapLastSixth(HWND hwnd) {
@@ -296,7 +309,7 @@ void snapLastSixth(HWND hwnd) {
   int x      = area.right - width;
   int y      = area.top;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP, x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapMaximize(HWND hwnd) {
@@ -305,7 +318,7 @@ void snapMaximize(HWND hwnd) {
   int y = area.top;
   int width = area.right - area.left;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapMaximizeHeight(HWND hwnd) {
@@ -316,7 +329,7 @@ void snapMaximizeHeight(HWND hwnd) {
   int width  = wnd.right - wnd.left;
   int y      = area.top;
   int height = area.bottom - area.top;
-  SetWindowPos(hwnd, HWND_TOP, x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapAlmostMaximize(HWND hwnd) {
@@ -326,7 +339,7 @@ void snapAlmostMaximize(HWND hwnd) {
   int y = area.top + margin;
   int width = (area.right - area.left) - margin * 2;
   int height = (area.bottom - area.top) - margin * 2;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapCenter(HWND hwnd) {
@@ -350,7 +363,7 @@ void snapCenterProminently(HWND hwnd) {
   int height = areaH * 3 / 4;
   int x = area.left + (areaW - width) / 2;
   int y = area.top + (areaH - height) / 2;
-  SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+  snapToRect(hwnd, x, y, width, height);
 }
 
 void snapRestore(HWND hwnd) {

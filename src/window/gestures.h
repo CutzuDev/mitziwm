@@ -63,5 +63,6 @@ struct GestureConfig {
 
 extern GestureConfig gestureConfig;
 
-void installGestureHook();
+void installGestureHook(HWND hwnd);
 void removeGestureHook();
+void onOverlayTimer();

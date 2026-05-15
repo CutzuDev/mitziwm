@@ -30,7 +30,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nShowCmd) {
     HWND hwnd = createMainWindow(hInstance);
     if (!hwnd) return 1;
 
-    installGestureHook();
+    installGestureHook(hwnd);
     createOverlay(hInstance, hwnd);
     addTrayIcon(hwnd);
 

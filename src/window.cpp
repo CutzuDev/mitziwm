@@ -38,6 +38,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         return 0;
     }
 
+    case WM_TIMER:
+        onOverlayTimer();
+        return 0;
+
     case WM_DESTROY:
         removeTrayIcon();
         removeGestureHook();
