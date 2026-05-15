@@ -1,12 +1,12 @@
 #include "window.h"
 #include "./window/gestures.h"
 #include "./tray/tray.h"
+#include "./config/config.h"
 #include <dwmapi.h>
 #include <windef.h>
 #include <winuser.h>
 
 static const int MENU_GESTURE_BASE = 2000;
-static const int MENU_QUIT         = 1;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg) {
@@ -20,6 +20,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             PostQuitMessage(0);
             return 0;
         }
+        if (id == MENU_STARTUP) {
+            setStartOnBoot(!isStartOnBoot());
+            return 0;
+        }
         if (id >= MENU_GESTURE_BASE && id < MENU_GESTURE_BASE + 400) {
             int dirIndex      = (id - MENU_GESTURE_BASE) / 100;
             SnapAction action = (SnapAction)((id - MENU_GESTURE_BASE) % 100);
@@ -29,10 +33,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 case 2: gestureConfig.up    = action; break;
                 case 3: gestureConfig.down  = action; break;
             }
+            saveConfig();
         }
         return 0;
     }
-
 
     case WM_DESTROY:
         removeTrayIcon();
@@ -47,11 +51,11 @@ HWND createMainWindow(HINSTANCE hInstance) {
     WNDCLASS wc      = {};
     wc.hInstance     = hInstance;
     wc.lpfnWndProc   = WindowProc;
-    wc.lpszClassName = L"SquareClass";
+    wc.lpszClassName = L"MitziWMClass";
 
     if (!RegisterClass(&wc)) return nullptr;
 
-    HWND hwnd = CreateWindowEx(0, L"SquareClass", L"my-wm",
+    HWND hwnd = CreateWindowEx(0, L"MitziWMClass", L"MitziWM",
                                WS_OVERLAPPEDWINDOW, 0, 0, 0, 0,
                                nullptr, nullptr, hInstance, nullptr);
 

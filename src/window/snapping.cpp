@@ -127,6 +127,16 @@ void snapLastThird(HWND hwnd) {
 
 // Two thirds
 
+void snapCenterHalf(HWND hwnd) {
+  RECT area  = getMonitorWorkArea(hwnd);
+  int areaW  = area.right - area.left;
+  int width  = areaW / 2;
+  int x      = area.left + (areaW - width) / 2;
+  int y      = area.top;
+  int height = area.bottom - area.top;
+  SetWindowPos(hwnd, HWND_TOP, x, y, width, height, SWP_NOACTIVATE);
+}
+
 void snapFirstTwoThirds(HWND hwnd) {
   RECT area = getMonitorWorkArea(hwnd);
   int x = area.left;
@@ -134,6 +144,16 @@ void snapFirstTwoThirds(HWND hwnd) {
   int width = (area.right - area.left) * 2 / 3;
   int height = area.bottom - area.top;
   SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+}
+
+void snapCenterTwoThirds(HWND hwnd) {
+  RECT area  = getMonitorWorkArea(hwnd);
+  int areaW  = area.right - area.left;
+  int width  = areaW * 2 / 3;
+  int x      = area.left + (areaW - width) / 2;
+  int y      = area.top;
+  int height = area.bottom - area.top;
+  SetWindowPos(hwnd, HWND_TOP, x, y, width, height, SWP_NOACTIVATE);
 }
 
 void snapLastTwoThirds(HWND hwnd) {
@@ -261,6 +281,24 @@ void snapBottomLastThird(HWND hwnd) {
 
 // Special
 
+void snapFirstSixth(HWND hwnd) {
+  RECT area  = getMonitorWorkArea(hwnd);
+  int x      = area.left;
+  int y      = area.top;
+  int width  = (area.right - area.left) / 6;
+  int height = area.bottom - area.top;
+  SetWindowPos(hwnd, HWND_TOP, x, y, width, height, SWP_NOACTIVATE);
+}
+
+void snapLastSixth(HWND hwnd) {
+  RECT area  = getMonitorWorkArea(hwnd);
+  int width  = (area.right - area.left) / 6;
+  int x      = area.right - width;
+  int y      = area.top;
+  int height = area.bottom - area.top;
+  SetWindowPos(hwnd, HWND_TOP, x, y, width, height, SWP_NOACTIVATE);
+}
+
 void snapMaximize(HWND hwnd) {
   RECT area = getMonitorWorkArea(hwnd);
   int x = area.left;
@@ -268,6 +306,17 @@ void snapMaximize(HWND hwnd) {
   int width = area.right - area.left;
   int height = area.bottom - area.top;
   SetWindowPos(hwnd, HWND_TOP,x, y, width, height, SWP_NOACTIVATE);
+}
+
+void snapMaximizeHeight(HWND hwnd) {
+  RECT area = getMonitorWorkArea(hwnd);
+  RECT wnd;
+  GetWindowRect(hwnd, &wnd);
+  int x      = wnd.left;
+  int width  = wnd.right - wnd.left;
+  int y      = area.top;
+  int height = area.bottom - area.top;
+  SetWindowPos(hwnd, HWND_TOP, x, y, width, height, SWP_NOACTIVATE);
 }
 
 void snapAlmostMaximize(HWND hwnd) {

@@ -9,6 +9,7 @@ HWND getWindowUnderCursor();
 // Halves
 void snapLeft(HWND hwnd);
 void snapRight(HWND hwnd);
+void snapCenterHalf(HWND hwnd);
 void snapTop(HWND hwnd);
 void snapBottom(HWND hwnd);
 
@@ -25,6 +26,7 @@ void snapLastThird(HWND hwnd);        // right 1/3
 
 // Two thirds (horizontal)
 void snapFirstTwoThirds(HWND hwnd);   // left 2/3
+void snapCenterTwoThirds(HWND hwnd);  // center 2/3
 void snapLastTwoThirds(HWND hwnd);    // right 2/3
 
 // Fourths (horizontal)
@@ -44,10 +46,13 @@ void snapTopLastThird(HWND hwnd);
 void snapBottomFirstThird(HWND hwnd);
 void snapBottomCenterThird(HWND hwnd);
 void snapBottomLastThird(HWND hwnd);
+void snapFirstSixth(HWND hwnd);       // full height, leftmost 1/6
+void snapLastSixth(HWND hwnd);        // full height, rightmost 1/6
 
 // Special
 void snapMaximize(HWND hwnd);
-void snapAlmostMaximize(HWND hwnd);   // maximized but with a small margin, like Rectangle Pro
+void snapAlmostMaximize(HWND hwnd);
+void snapMaximizeHeight(HWND hwnd);   // full height, keep current width
 void snapCenter(HWND hwnd);           // centered, original size
 void snapCenterProminently(HWND hwnd); // centered, larger size (like a focused window)
 void snapRestore(HWND hwnd);          // restore original size and position

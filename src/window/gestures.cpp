@@ -14,17 +14,42 @@ GestureConfig gestureConfig;
 
 static void executeSnap(HWND target, SnapAction action) {
     switch (action) {
-        case SnapAction::Left:        snapLeft(target);        break;
-        case SnapAction::Right:       snapRight(target);       break;
-        case SnapAction::Top:         snapTop(target);         break;
-        case SnapAction::Bottom:      snapBottom(target);      break;
-        case SnapAction::TopLeft:     snapTopLeft(target);     break;
-        case SnapAction::TopRight:    snapTopRight(target);    break;
-        case SnapAction::BottomLeft:  snapBottomLeft(target);  break;
-        case SnapAction::BottomRight: snapBottomRight(target); break;
-        case SnapAction::Maximize:    snapMaximize(target);    break;
-        case SnapAction::Center:      snapCenter(target);      break;
-        case SnapAction::Restore:     snapRestore(target);     break;
+        case SnapAction::Maximize:          snapMaximize(target);         break;
+        case SnapAction::AlmostMaximize:    snapAlmostMaximize(target);   break;
+        case SnapAction::MaximizeHeight:    snapMaximizeHeight(target);   break;
+        case SnapAction::Left:              snapLeft(target);             break;
+        case SnapAction::Right:             snapRight(target);            break;
+        case SnapAction::CenterHalf:        snapCenterHalf(target);       break;
+        case SnapAction::Top:               snapTop(target);              break;
+        case SnapAction::Bottom:            snapBottom(target);           break;
+        case SnapAction::TopLeft:           snapTopLeft(target);          break;
+        case SnapAction::TopRight:          snapTopRight(target);         break;
+        case SnapAction::BottomLeft:        snapBottomLeft(target);       break;
+        case SnapAction::BottomRight:       snapBottomRight(target);      break;
+        case SnapAction::FirstThird:        snapFirstThird(target);       break;
+        case SnapAction::CenterThird:       snapCenterThird(target);      break;
+        case SnapAction::LastThird:         snapLastThird(target);        break;
+        case SnapAction::FirstTwoThirds:    snapFirstTwoThirds(target);   break;
+        case SnapAction::CenterTwoThirds:   snapCenterTwoThirds(target);  break;
+        case SnapAction::LastTwoThirds:     snapLastTwoThirds(target);    break;
+        case SnapAction::FirstFourth:       snapFirstFourth(target);      break;
+        case SnapAction::SecondFourth:      snapSecondFourth(target);     break;
+        case SnapAction::ThirdFourth:       snapThirdFourth(target);      break;
+        case SnapAction::LastFourth:        snapLastFourth(target);       break;
+        case SnapAction::FirstThreeFourths: snapFirstThreeFourths(target);break;
+        case SnapAction::LastThreeFourths:  snapLastThreeFourths(target); break;
+        case SnapAction::TopFirstThird:     snapTopFirstThird(target);    break;
+        case SnapAction::TopCenterThird:    snapTopCenterThird(target);   break;
+        case SnapAction::TopLastThird:      snapTopLastThird(target);     break;
+        case SnapAction::BottomFirstThird:  snapBottomFirstThird(target); break;
+        case SnapAction::BottomCenterThird: snapBottomCenterThird(target);break;
+        case SnapAction::BottomLastThird:   snapBottomLastThird(target);  break;
+        case SnapAction::FirstSixth:        snapFirstSixth(target);       break;
+        case SnapAction::LastSixth:         snapLastSixth(target);        break;
+        case SnapAction::Center:            snapCenter(target);           break;
+        case SnapAction::CenterProminently: snapCenterProminently(target);break;
+        case SnapAction::Restore:           snapRestore(target);          break;
+        default: break;
     }
 }
 

@@ -2,11 +2,10 @@
 #include "window/gestures.h"
 #include "window/overlay.h"
 #include "tray/tray.h"
+#include "config/config.h"
 #include <windows.h>
 
 static void enableDarkMode() {
-    // SetPreferredAppMode is undocumented, exported by ordinal from uxtheme.dll
-    // ForceDark = 2
     typedef int (WINAPI* fnSetPreferredAppMode)(int);
     HMODULE ux = LoadLibraryW(L"uxtheme.dll");
     if (ux) {
@@ -20,11 +19,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nShowCmd) {
     SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
     enableDarkMode();
 
-    HANDLE mutex = CreateMutex(nullptr, TRUE, L"my-wm-instance");
+    HANDLE mutex = CreateMutex(nullptr, TRUE, L"MitziWM-instance");
     if (GetLastError() == ERROR_ALREADY_EXISTS) {
-        MessageBox(nullptr, L"my-wm is already running.", L"my-wm", MB_OK | MB_ICONINFORMATION);
+        MessageBox(nullptr, L"MitziWM is already running.", L"MitziWM", MB_OK | MB_ICONINFORMATION);
         return 0;
     }
+
+    loadConfig();
 
     HWND hwnd = createMainWindow(hInstance);
     if (!hwnd) return 1;
@@ -38,5 +39,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nShowCmd) {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
+
+    CloseHandle(mutex);
     return 0;
 }
