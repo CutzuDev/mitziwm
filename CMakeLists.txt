@@ -8,6 +8,7 @@ add_executable(my-wm WIN32
     src/window.cpp
     src/window/snapping.cpp
     src/window/gestures.cpp
+    src/window/overlay.cpp
     src/tray/tray.cpp
 )
 
@@ -15,6 +16,7 @@ target_link_libraries(my-wm
     user32
     shell32
     gdi32
+    dwmapi
 )
 target_compile_definitions(my-wm PRIVATE
     UNICODE
