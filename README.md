@@ -42,7 +42,7 @@ Settings are saved to `%APPDATA%\MitziWM\config.ini`.
   Installer: https://visualstudio.microsoft.com/downloads/  
   During install, make sure "MSVC v143" and "Windows 11 SDK" are checked.
 
-- **CMake 3.20+**  
+- **CMake 3.23+**  
   Either install it standalone from https://cmake.org/download/ or tick **CMake tools for Windows** inside the Visual Studio installer.
 
 - **Git**  
