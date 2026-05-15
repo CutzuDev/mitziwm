@@ -1,5 +1,6 @@
 #include "gestures.h"
 #include "snapping.h"
+#include <cstdio>
 #include <cstdlib>
 #include <windef.h>
 #include <windows.h>
@@ -14,26 +15,23 @@ static POINT gestureStart;
 void handleGesture(POINT start, POINT end) {
   int dx = end.x - start.x;
   int dy = end.y - start.y;
+
   HWND target = getWindowUnderCursor();
   if (!target)
     return;
   if (abs(dx) > abs(dy)) {
     if (dx > 0) {
-      // snap right
       snapRight(target);
     }
     if (dx < 0) {
-      // snap right
       snapLeft(target);
     }
   } else {
     if (dy > 0) {
-      // snap bottom
       snapBottom(target);
     }
     if (dy < 0) {
-      // snap top
-      //
+
       snapCenter(target);
     }
   }
@@ -47,10 +45,11 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
   KBDLLHOOKSTRUCT *key = (KBDLLHOOKSTRUCT *)lParam;
 
   if (wParam == WM_KEYDOWN) {
-    if (key->vkCode == VK_CONTROL)
+    if (key->vkCode == VK_LCONTROL || key->vkCode == VK_RCONTROL)
       ctrlHeld = true;
-    if (key->vkCode == VK_SHIFT)
+    if (key->vkCode == VK_LSHIFT || key->vkCode == VK_RSHIFT)
       shiftHeld = true;
+
     if (ctrlHeld && shiftHeld && !gestureActive) {
       GetCursorPos(&gestureStart);
       gestureActive = true;
@@ -58,11 +57,11 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
   }
 
   if (wParam == WM_KEYUP) {
-    if (key->vkCode == VK_CONTROL)
+    if (key->vkCode == VK_LCONTROL || key->vkCode == VK_RCONTROL)
       ctrlHeld = false;
-    if (key->vkCode == VK_SHIFT)
+    if (key->vkCode == VK_LSHIFT || key->vkCode == VK_RSHIFT)
       shiftHeld = false;
-    
+
     if (gestureActive && (!ctrlHeld || !shiftHeld)) {
       POINT gestureEnd;
       GetCursorPos(&gestureEnd);

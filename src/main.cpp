@@ -16,7 +16,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nShowCmd) {
   ShowWindow(hwnd, SW_SHOWNORMAL);
   UpdateWindow(hwnd);
 
-  MSG msg = {};
+MSG msg = {};
 
   while (GetMessage(&msg, nullptr, 0, 0)) {
     TranslateMessage(&msg);
